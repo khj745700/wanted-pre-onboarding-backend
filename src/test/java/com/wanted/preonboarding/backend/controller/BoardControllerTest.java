@@ -6,6 +6,7 @@ import com.wanted.preonboarding.backend.dto.SignupDto;
 import com.wanted.preonboarding.backend.security.dto.properties.JWT;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -251,6 +252,17 @@ class BoardControllerTest {
                         .header(JWT.ACCESS_TOKEN_HEADER, accessToken)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+        String expectBody = objectMapper.writeValueAsString(
+                BoardDto.builder()
+                        .title(title)
+                        .description(description)
+                        .username(WRITER_USERNAME)
+                        .build()
+        );
+
+        mvc.perform(MockMvcRequestBuilders.get("/board/1")
+                ).andExpect(MockMvcResultMatchers.content().string(expectBody));
     }
 
     @Test
@@ -278,12 +290,15 @@ class BoardControllerTest {
     @Test
     @DisplayName("[게시글][삭제]")
     @Order(10)
-    void remove_board() throws Exception{
+    void remove_board() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders.delete("/board/1")
                         .header(JWT.ACCESS_TOKEN_HEADER, accessToken)
                 )
                 .andExpect(MockMvcResultMatchers.status().isAccepted());
+
+        mvc.perform(MockMvcRequestBuilders.get("/board/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 }
