@@ -28,7 +28,6 @@ public class Member extends BaseEntity{
     private String username;
 
 
-    //id가 null일 때도 체킹할 수 있도록. (비영속 상태에서의 체킹)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,12 +36,13 @@ public class Member extends BaseEntity{
         Member member = (Member) o;
 
         if (!Objects.equals(password, member.password)) return false;
+        if (!Objects.equals(id, member.getId())) return false;
         return Objects.equals(username, member.username);
     }
 
     @Override
     public int hashCode() {
-        int result = 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         return result;

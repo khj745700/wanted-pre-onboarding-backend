@@ -6,8 +6,10 @@ import com.wanted.preonboarding.backend.dto.BoardRegisterDto;
 import com.wanted.preonboarding.backend.service.EditBoardService;
 import com.wanted.preonboarding.backend.service.FindBoardService;
 import com.wanted.preonboarding.backend.service.RegisterBoardService;
+import com.wanted.preonboarding.backend.service.RemoveBoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,18 @@ public class BoardController {
     private final RegisterBoardService registerBoardService;
     private final EditBoardService editBoardService;
     private final FindBoardService findBoardService;
+    private final RemoveBoardService removeBoardService;
+
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<?> boardDetailFind(@PathVariable Long boardId) {
+        return findBoardService.findBoardDetails(boardId);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> boardLists(Pageable pageable) {
+        return findBoardService.findBoards(pageable);
+    }
 
     @PostMapping("")
     public ResponseEntity<?> boardRegister(@Valid @RequestBody BoardRegisterDto dto) {
@@ -31,8 +45,9 @@ public class BoardController {
         return editBoardService.editBoard(dto, boardId);
     }
 
-    @GetMapping("/{boardId}")
-    public ResponseEntity<?> boardDetailFind(@PathVariable Long boardId) {
-        return findBoardService.findBoardDetails(boardId);
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<?> boardRemove(@PathVariable Long boardId) {
+        return removeBoardService.removeBoard(boardId);
     }
 }

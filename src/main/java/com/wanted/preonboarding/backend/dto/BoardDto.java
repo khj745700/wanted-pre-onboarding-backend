@@ -1,5 +1,6 @@
 package com.wanted.preonboarding.backend.dto;
 
+import com.wanted.preonboarding.backend.entity.Board;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -14,4 +15,15 @@ public class BoardDto {
 
     @NotNull
     private String description;
+
+    private String username;
+
+    public static BoardDto of(Board board){
+        BoardDto boardDto = BoardDto.builder()
+                .description(board.getDescription())
+                .title(board.getTitle())
+                .username(board.getMember().getUsername())
+                .build();
+        return boardDto;
+    }
 }
