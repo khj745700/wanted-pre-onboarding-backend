@@ -18,7 +18,7 @@ public class BoardDto {
 
     private String username;
 
-    public static BoardDto of(Board board){
+    public static BoardDto of(final Board board){
         BoardDto boardDto = BoardDto.builder()
                 .description(board.getDescription())
                 .title(board.getTitle())

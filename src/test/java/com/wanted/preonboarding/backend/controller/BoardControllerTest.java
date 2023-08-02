@@ -286,7 +286,6 @@ class BoardControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
-
     @Test
     @DisplayName("[게시글][삭제]")
     @Order(10)
