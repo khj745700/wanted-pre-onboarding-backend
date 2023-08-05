@@ -22,7 +22,7 @@ services:
       - "80:8080"
     volumes:
       - ./app:/app
-    working_dir: /app
+    working_dir: /app/wanted-pre-onboarding-backend
     command: ["./gradlew", "bootrun"]
     depends_on:
       - db
