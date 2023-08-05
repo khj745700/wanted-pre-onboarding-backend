@@ -1,0 +1,29 @@
+version: "3"
+services:
+  db:
+    container_name: wanted-preonboarding-db
+    image: mysql
+    environment:
+      MYSQL_DATABASE: preonboarding_db
+      MYSQL_USER: wanted
+      MYSQL_PASSWORD: fu0a930a9u
+      MYSQL_ROOT_PASSWORD: 1f9af389wko
+    volumes:
+      - ./db/data:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+    restart: always
+
+
+  app:
+    container_name: wanted-preonboarding-app
+    image: openjdk:17-jdk
+    ports:
+      - "80:8080"
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: ["./gradlew", "bootrun"]
+    depends_on:
+      - db
+    restart: always

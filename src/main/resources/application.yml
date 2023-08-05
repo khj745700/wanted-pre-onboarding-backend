@@ -1,5 +1,4 @@
 spring:
-  host: 'https://localhost:8080/'
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wanted
