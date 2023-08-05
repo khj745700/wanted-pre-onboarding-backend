@@ -1,0 +1,27 @@
+spring:
+  host: 'https://localhost:8080/'
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wanted
+    username: root
+    password:
+
+
+  jpa:
+    show-sql: true
+    open-in-view: false #default : true이기에 수정해야 함.
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        highlight_sql: true
+        format_sql: true
+
+###추가된 내용###
+jwt:
+  issuer: wanted.preonboarding.backend
+  secret-key: QWED2312erwQEW!sdAQWE!@ASCX
+  refresh-secret-key: test
+  expiry-period: 1440 #분단위 1일
+  refresh-expiry-period: 43200 #분단위 30일
+
