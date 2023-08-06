@@ -10,8 +10,12 @@
 
 ## 2. 애플리케이션의 실행 방법 (엔드포인트 호출 방법 포함)
 - Docker Compose가 구현되어있습니다.
-  프로젝트 루트 디렉토리에 compose-docker up 을 쳐주시면 애플리케이션이 실행됩니다.
+  
+  프로젝트 루트 디렉토리에 ./gradlew -x test 명령어를 치신 후, compose-docker up 을 쳐주시면 애플리케이션이 실행됩니다.
   백그라운드에서 실행을 원하시면 compose-docker up -d 명령어를 사용해주시면 애플리케이션이 백그라운드에서 동작됩니다.
+
+<img width="399" alt="스크린샷 2023-08-06 오후 11 58 12" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/a43b0922-2a22-4ec4-864a-d62f160f9b3c"><br>
+위는 테스트 여부입니다.
 
 
 - 엔드포인트 호출은 저는 포스트맨으로 진행했습니다.
