@@ -1,7 +1,7 @@
-version: "3"
+version: "3.2"
 services:
-  db:
-    container_name: wanted-preonboarding-db
+  database:
+    container_name: wanted-preonboarding-database
     image: mysql
     environment:
       MYSQL_DATABASE: preonboarding_db
@@ -12,18 +12,15 @@ services:
       - ./db/data:/var/lib/mysql:rw
     ports:
       - "3306:3306"
-    restart: always
 
 
   app:
-    container_name: wanted-preonboarding-app
-    image: openjdk:17-jdk
+    build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://wanted-preonboarding-database:3306/preonboarding_db
+      SPRING_DATASOURCE_USERNAME: wanted
+      SPRING_DATASOURCE_PASSWORD: fu0a930a9u
     ports:
       - "8080:8080"
-    volumes:
-      - ./app:/app
-    working_dir: /wanted-pre-onboarding-backend
-    command: ["./gradlew", "bootrun"]
     depends_on:
-      - db
-    restart: always
+      - database
