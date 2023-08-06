@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BoardControllerTest {
 
     @Autowired
@@ -32,13 +33,13 @@ class BoardControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static String accessToken;
+    private String accessToken;
     private static final String SAVE_TITLE = "title";
     private static final String SAVE_DESCRIPTION = "description";
     private static final String WRITER_USERNAME = "@";
 
     private static final String ANOTHER_USERNAME = "@1";
-    private static String anotherUserAccessToken;
+    private String anotherUserAccessToken;
 
     @Order(1)
     @Test
@@ -71,7 +72,6 @@ class BoardControllerTest {
         accessToken = loginResult.getResponse().getHeader(JWT.ACCESS_TOKEN_HEADER);
         anotherUserAccessToken = anotherUserLoginResult.getResponse().getHeader(JWT.ACCESS_TOKEN_HEADER);
     }
-
     @Test
     @DisplayName("[게시글][작성] 로그인 여부 - 로그인 X")
     @Order(2)

@@ -19,10 +19,10 @@ services:
     container_name: wanted-preonboarding-app
     image: openjdk:17-jdk
     ports:
-      - "80:8080"
+      - "8080:8080"
     volumes:
       - ./app:/app
-    working_dir: /app/wanted-pre-onboarding-backend
+    working_dir: /wanted-pre-onboarding-backend
     command: ["./gradlew", "bootrun"]
     depends_on:
       - db
