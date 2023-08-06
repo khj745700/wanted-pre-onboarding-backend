@@ -55,173 +55,425 @@ Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문�
 
 ## 5. API 명세(request/response 포함)
 
-
-### 회원가입
+<details>
+<summary><h3>회원가입</h3></summary>
+<div markdown="1">
+  
 |엔드포인트|메서드명|
 |---|---|
+|/signup|post|
 
 ### request
 ```json
-
-
+{
+    "username": "@",
+    "password": "12345678"
+}
 ```
 
 
 ### response
 성공 시
-```json
-
-
-```
+202 Accepted
 
 실패 시
-이메일 검증 실패
+- 이메일 검증 실패
+400 Bad Request
+```json
+{
+    "errorMessage": "값이 유효하지 않습니다. (@가 포함되어야 합니다.)",
+    "httpStatus": "BAD_REQUEST"
+}
+```
 
-
-비밀번호 검증 실패
+- 비밀번호 검증 실패
+400 Bad Request
+```json
+{
+    "errorMessage": "값이 유효하지 않습니다. (8글자 이상이어야 합니다.)",
+    "httpStatus": "BAD_REQUEST"
+}
+```
 
 <br>
 <br>
 
-### 로그인
+</details>
+</div>
+
+
+
+<details>
+<summary><h3>로그인</h3></summary>
+<div markdown="1">
+
 |엔드포인트|메서드명|
 |---|---|
+|/login|post|
 
 ### request
 ```json
-
-
+{
+    "username": "@",
+    "password": "12345678"
+}
 ```
 
 
 ### response
 성공 시
-```json
-
-
-```
+200 OK
 
 실패 시
-
+```c
+"Invalid Username or Password"
+```
 
 <br>
 <br>
 
-### 게시글 작성
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 작성</h3></summary>
+<div markdown="1">
+
 |엔드포인트|메서드명|
 |---|---|
+|/board|post|
 
 ### request
 ```json
-
-
+{
+    "title":"hello",
+    "description":"test"
+}
 ```
 
 
 ### response
 성공 시
-```json
-
-
-```
+200 OK
 
 실패 시
+- 로그인 되어 있지 않음
+401 Unauthorized
+```json
+{
+    "errorMessage": "로그인 후 이용해주세요",
+    "httpStatus": "UNAUTHORIZED"
+}
+```
 
+- 제목이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "제목을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+- 내용이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "내용을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
 
 <br>
 <br>
 
-### 게시글 수정
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 수정</h3></summary>
+<div markdown="1">
+
 |엔드포인트|메서드명|
 |---|---|
+|/board/{id}|put|
 
 ### request
 ```json
-
-
+{
+    "title":"hello",
+    "description":"test"
+}
 ```
 
 
 ### response
 성공 시
-```json
-
-
-```
+200 OK
 
 실패 시
+- 로그인 되어 있지 않음
+401 Unauthorized
+```json
+{
+    "errorMessage": "로그인 후 이용해주세요",
+    "httpStatus": "UNAUTHORIZED"
+}
+```
 
+- 수정 권한이 없음.
+- 403 FORBIDDEN
+```json
+{
+    "errorMessage": "수정할 수 없습니다. 잘못된 접근입니다.",
+    "httpStatus": "FORBIDDEN"
+}
+```
+
+- 제목이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "제목을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+- 내용이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "내용을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
 
 <br>
 <br>
 
-### 게시글 삭제
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 삭제</h3></summary>
+<div markdown="1">
+
 |엔드포인트|메서드명|
 |---|---|
+|/board/{id}|delete|
+
+성공 시
+202 Accepted
+
+실패 시
+- 로그인 되어 있지 않음
+401 Unauthorized
+```json
+{
+    "errorMessage": "로그인 후 이용해주세요",
+    "httpStatus": "UNAUTHORIZED"
+}
+```
+
+- 수정 권한이 없음.
+- 403 FORBIDDEN
+```json
+{
+    "errorMessage": "수정할 수 없습니다. 잘못된 접근입니다.",
+    "httpStatus": "FORBIDDEN"
+}
+```
+
+
+<br>
+<br>
+
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 단일 조회</h3></summary>
+<div markdown="1">
+
+|엔드포인트|메서드명|
+|---|---|
+|/board/{id}|get|
 
 ### request
-```json
 
-
-```
 
 
 ### response
 성공 시
 ```json
-
-
+{
+  "title":"안녕하세요",
+  "description": "신입입니다!",
+  "username": "@"
+}
 ```
 
 실패 시
+404 NOT FOUND
+```json
+{
+  "errorMessage": "해당 자원을 찾을 수 없습니다.",
+  "httpStatus": "NOT_FOUND"
+}
+```
 
 
 <br>
 <br>
 
-### 게시글 단일 조회
+</details>
+</div>
+
+<details>
+<summary><h3>게시글 페이지 조회</h3></summary>
+<div markdown="1">
+
 |엔드포인트|메서드명|
 |---|---|
+|/board?page={pageNum}|get|
 
 ### request
-```json
 
-
-```
 
 
 ### response
 성공 시
 ```json
-
-
+{
+    "content": [
+        {
+            "boardId": 1,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 2,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 3,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 4,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 5,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 6,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 7,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 8,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 9,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 10,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 11,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 12,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 13,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 14,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 15,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 16,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "empty": true,
+            "sorted": false,
+            "unsorted": true
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 20,
+        "paged": true,
+        "unpaged": false
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 16,
+    "first": true,
+    "size": 20,
+    "number": 0,
+    "sort": {
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+    },
+    "numberOfElements": 16,
+    "empty": false
+}
 ```
 
-실패 시
-
-
-<br>
-<br>
-
-### 게시글 페이지 조회
-|엔드포인트|메서드명|
-|---|---|
-
-### request
-```json
-
-
-```
-
-
-### response
-성공 시
-```json
-
-
-```
-
-실패 시
-
-
-
+</details>
+</div>
