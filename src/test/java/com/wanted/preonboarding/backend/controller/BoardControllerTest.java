@@ -33,17 +33,15 @@ class BoardControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private String accessToken;
+    private static String accessToken;
     private static final String SAVE_TITLE = "title";
     private static final String SAVE_DESCRIPTION = "description";
     private static final String WRITER_USERNAME = "@";
 
     private static final String ANOTHER_USERNAME = "@1";
-    private String anotherUserAccessToken;
+    private static String anotherUserAccessToken;
 
-    @Order(1)
-    @Test
-    @DisplayName("[회원가입 및 로그인]")
+    @BeforeEach
     void getAccessToken() throws Exception {
         String username = WRITER_USERNAME;
         String password = "testtest";
@@ -72,9 +70,10 @@ class BoardControllerTest {
         accessToken = loginResult.getResponse().getHeader(JWT.ACCESS_TOKEN_HEADER);
         anotherUserAccessToken = anotherUserLoginResult.getResponse().getHeader(JWT.ACCESS_TOKEN_HEADER);
     }
+
     @Test
     @DisplayName("[게시글][작성] 로그인 여부 - 로그인 X")
-    @Order(2)
+    @Order(1)
     void board_write_checking_login() throws Exception{
         //given
         String title = SAVE_TITLE;
@@ -97,7 +96,7 @@ class BoardControllerTest {
 
     @Test
     @DisplayName("[게시글][작성] 로그인 여부 - 로그인 O")
-    @Order(3)
+    @Order(2)
     void board_write_checking_login_have_access_token() throws Exception{
         //given
         String title = SAVE_TITLE;
@@ -109,8 +108,6 @@ class BoardControllerTest {
                         .description(description)
                         .build()
         );
-
-
         mvc.perform(MockMvcRequestBuilders.post("/board")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,6 +126,7 @@ class BoardControllerTest {
 
         String expectBody = objectMapper.writeValueAsString(
                 BoardDto.builder()
+                        .boardId((long)id)
                         .title(SAVE_TITLE)
                         .description(SAVE_DESCRIPTION)
                         .username("@")
@@ -148,8 +146,6 @@ class BoardControllerTest {
         String description = SAVE_DESCRIPTION;
 
 
-
-
         IntStream.rangeClosed(0, 40).forEach(num -> {
             try {
                 String body = objectMapper.writeValueAsString(
@@ -160,8 +156,7 @@ class BoardControllerTest {
                 );
                 mvc.perform(MockMvcRequestBuilders.post("/board")
                         .content(body)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(JWT.ACCESS_TOKEN_HEADER, accessToken)
+                        .contentType(MediaType.APPLICATION_JSON).header(JWT.ACCESS_TOKEN_HEADER, accessToken)
                 );
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -255,6 +250,7 @@ class BoardControllerTest {
 
         String expectBody = objectMapper.writeValueAsString(
                 BoardDto.builder()
+                        .boardId((long)1)
                         .title(title)
                         .description(description)
                         .username(WRITER_USERNAME)

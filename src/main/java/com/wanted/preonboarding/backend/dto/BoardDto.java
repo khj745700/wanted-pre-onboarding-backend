@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 public class BoardDto {
+    private Long boardId;
     @NotNull
     private String title;
 
@@ -23,6 +24,7 @@ public class BoardDto {
                 .description(board.getDescription())
                 .title(board.getTitle())
                 .username(board.getMember().getUsername())
+                .boardId(board.getId())
                 .build();
         return boardDto;
     }
