@@ -50,7 +50,7 @@ Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문�
 
 ## 4. 구현한 API의 동작을 촬영한 데모 영상 링크
 
-
+[다운로드 링크](https://drive.google.com/file/d/1mDOy4A2eIoeoB-6HGNO7BVdc4O-M3v7J/view?usp=sharing)
 <br>
 <br>
 <br>
@@ -59,19 +59,47 @@ Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문�
 ## 5. 구현 방법 및 이유에 대한 간략한 설명
 
 ### CustomException 및 GlobalException
+![스크린샷 2023-08-06 오후 11 17 12](https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/e2ce7e1e-5897-48fd-a2ca-37c9dfc532e3)
 
+<img width="1175" alt="스크린샷 2023-08-06 오후 11 18 16" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/33f2525b-a373-4f38-9e0c-5d7b78ee9f57">
+
+서버를 개발하다 보면, 많은 Runtime Error와 마주치게 됩니다. 그럴때마다 Exception을 하나씩 정의해서 핸들링 하기 매우 번거로운 상황에 발생합니다.<br>
+그렇기 때문에, RestControllerAdvice를 활용해서 ExceptionHandler의 CustomException을 활용해서 적용시키면 추상적으로 동작하므로 유지보수적으로 용이합니다.
+
+<br>
+<br>
 
 ### DTO Valiate
+<img width="629" alt="스크린샷 2023-08-06 오후 11 20 47" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/d1c2f9e4-0be0-4eab-a601-5d6819749f23">
 
+대표적으롤 회원가입 DTO를 가져왔습니다. 회원가입 시에, NotNull 체킹과 정규식을 활용해서 공백 제거 등 controller 단에 접근하기 전 ArgumentResolver가 그전에 throw 해주기 위해 적용했습니다.
+그럼 위에 GlobalException에 선언해 놓은 MethodArgumentNotValidException Handler가 동작하여 리턴해주게 됩니다.
 
 ### BcryptEncode
+<img width="601" alt="스크린샷 2023-08-06 오후 11 26 13" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/1894c037-969e-4fb0-9648-f9109456dd6f">
+위 DTO Valdiate 에서 적용된 to Entity() 단에 보시면 ArgumentResolver가 정상적으로 동작했다면 toEntity()는 Service 단에서 만 돌기 때문에 bcrypt 암호화 해서 salt를 붙여서 데이터베이스에 저장됨을 확인할 수 있습니다.
 
+### 로그인 및 수정 권한 체킹
+AOP 및 interface static method를 활용한 처리를 하였습니다.<br>
+<img width="280" alt="스크린샷 2023-08-06 오후 11 27 23" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/8fb23e46-ccd6-49ad-993e-b63daf6466a7"><br>
+- 먼저 LoginCheck어노테이션을 위와 같이 생성합니다.<br>
 
-### JWT 인증 방식
+<img width="662" alt="스크린샷 2023-08-06 오후 11 27 50" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/7c844bb7-7995-484a-a3e1-40d8e287aaff"><br>
+- 그리고 aop를 활용해 로그인이 되었는지(Http Header에 Authorization의 JWT access 토큰이 있어야 함), SecurityContextHolder에 선언되어있는 Principle을 가져오는 Contextholder클래스를 활용해 현재 세션을 가져옵니다.
+- 만약 null이라면 로그인 하지 않은 경우이므로(access Token이 누락된 경우) 에러를 던집니다.<br>
 
+<img width="571" alt="스크린샷 2023-08-06 오후 11 28 14" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/a93de1f7-ade4-4249-adbf-abdfc683127d"><br>
+- 그리고 Board Entity에 EditAuthenticationCheck를 상속 받습니다.<br>
 
+<img width="403" alt="스크린샷 2023-08-06 오후 11 28 46" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/b9aded13-9134-4a2d-9280-7dc4cca9075b"><br>
+- 그러면 static 메서드로 인증 체크하는 기능이 있음을 확인할 수 있습니다.<br>
 
+<img width="649" alt="스크린샷 2023-08-06 오후 11 36 25" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/3571a186-1a8e-4b4f-856c-b540cb0c136e"><br>
+- 그리고 Member의 HashCode와 equals를 오버라이딩 합니다.<br>
+- 그 이유는, Member는 SecurityContextHolder에서 온 객체이므로 영속성 관리가 되어 있지 않는 객체입니다. 따라서 equals나 hashcode가 동작하지 않을 가능성이 있기 때문에, 오버라이딩 해주어 차 후 기능에 문제가 없이 동작하도록 하였습니다.<br>
 
+<img width="490" alt="스크린샷 2023-08-06 오후 11 29 11" src="https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/e24cdce5-5e97-4f63-a1dc-07b42fe76d0b"><br>
+- 그러면 Service 단에서 수정및 삭제 권한이 필요한 객체들은 현재 세션을 가져와서 접근하면 되므로 사용이 편리하게 됩니다.
 
 
 ## 6. API 명세(request/response 포함)
