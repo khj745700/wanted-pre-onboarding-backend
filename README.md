@@ -53,7 +53,26 @@ Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문�
 <br>
 <br>
 
-## 5. API 명세(request/response 포함)
+
+## 5. 구현 방법 및 이유에 대한 간략한 설명
+
+### CustomException 및 GlobalException
+
+
+### DTO Valiate
+
+
+### BcryptEncode
+
+
+### JWT 인증 방식
+
+
+
+
+
+
+## 6. API 명세(request/response 포함)
 
 <details>
 <summary><h3>회원가입</h3></summary>
@@ -93,6 +112,12 @@ Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문�
     "errorMessage": "값이 유효하지 않습니다. (8글자 이상이어야 합니다.)",
     "httpStatus": "BAD_REQUEST"
 }
+```
+
+- 중복 회원 존재
+400 Bad Request
+```json
+
 ```
 
 <br>
