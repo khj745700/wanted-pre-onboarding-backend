@@ -11,10 +11,10 @@ import lombok.*;
 @Setter
 public class BoardDto {
     private Long boardId;
-    @NotNull
+    @NotNull(message = "제목을 채워야 합니다.")
     private String title;
 
-    @NotNull
+    @NotNull(message = "내용을 채워야 합니다.")
     private String description;
 
     private String username;

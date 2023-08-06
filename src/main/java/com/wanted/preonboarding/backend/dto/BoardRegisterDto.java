@@ -11,10 +11,10 @@ import lombok.*;
 @Getter
 @Setter
 public class BoardRegisterDto {
-    @NotNull
+    @NotNull(message = "제목을 채워야 합니다.")
     private String title;
 
-    @NotNull
+    @NotNull(message = "내용을 채워야 합니다.")
     private String description;
 
     public Board toEntity(Member member) {

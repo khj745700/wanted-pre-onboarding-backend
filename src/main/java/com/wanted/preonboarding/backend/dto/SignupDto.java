@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Setter
 public class SignupDto {
     @NotNull(message = "이메일 값을 넣어주세요. @가 포함되어야 합니다.")
-    @Pattern(regexp = "[^\s]*@[^\s]*$")
+    @Pattern(regexp = "[^\s]*@[^\s]*$", message = "@가 포함되어야 합니다.")
     private String username;
 
     @NotNull(message = "값을 넣어주세요. 8글자 이상이어야 합니다.")

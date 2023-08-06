@@ -20,18 +20,15 @@ public class JWTFactory {
 
     private final String issuer;
     private final String secretKey;
-    private final String refreshSecretKey;
     private final long expiryPeriod;
     private final long refreshExpiryPeriod;
 
     public JWTFactory(@Value("${jwt.issuer}") String issuer,
                       @Value("${jwt.secret-key}") String secretKey,
-                      @Value("${jwt.refresh-secret-key}") String refreshSecretKey,
                       @Value("${jwt.expiry-period}") long expiryPeriod,
                       @Value("${jwt.refresh-expiry-period}") long refreshExpiryPeriod) {
         this.issuer = issuer;
         this.secretKey = secretKey;
-        this.refreshSecretKey = refreshSecretKey;
         this.expiryPeriod = expiryPeriod;
         this.refreshExpiryPeriod = refreshExpiryPeriod;
     }
@@ -39,10 +36,6 @@ public class JWTFactory {
 
     public String createAccessToken(Member member){
         return createToken(member, secretKey, expiryPeriod);
-    }
-
-    public String createRefreshToken(Member member){
-        return createToken(member, refreshSecretKey, refreshExpiryPeriod);
     }
 
     private String createToken(Member member, String key, long period) {
