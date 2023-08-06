@@ -30,7 +30,7 @@
 <br>
 EC2에 Docker compose를 올리려 했으나 t3.micro 상에서는 시스템이 다운되는 현상이 발생해,
 
-Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문제가 있어 이는 CI/CD를 구축 중에 있습니다.
+Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해 CI/CD를 구축하고자 합니다.
 
 
 <br>
