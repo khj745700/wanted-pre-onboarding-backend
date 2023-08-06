@@ -39,7 +39,9 @@ Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문�
 
 ## 3. 데이터베이스 테이블 구조
 
-![스크린샷 2023-08-06 오후 4 25 32](https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/1a659b05-2630-4426-9399-33eddb745833)
+![스크린샷 2023-08-06 오후 10 22 21](https://github.com/khj745700/wanted-pre-onboarding-backend/assets/68643347/da11def2-7801-4797-a538-09daaba81852)
+
+
 - password는 BcryptEncoder로 암호화 되서 저장되도록 구현했습니다.
 
 <br>
@@ -53,6 +55,452 @@ Code Deploy를 활용해 EC2로 배포, Mysql은 RDS로 사용해야 하는 문�
 <br>
 <br>
 
-## 5. API 명세(request/response 포함)
+
+## 5. 구현 방법 및 이유에 대한 간략한 설명
+
+### CustomException 및 GlobalException
 
 
+### DTO Valiate
+
+
+### BcryptEncode
+
+
+### JWT 인증 방식
+
+
+
+
+
+
+## 6. API 명세(request/response 포함)
+
+<details>
+<summary><h3>회원가입</h3></summary>
+<div markdown="1">
+  
+|엔드포인트|메서드명|
+|---|---|
+|/signup|post|
+
+### request
+```json
+{
+    "username": "@",
+    "password": "12345678"
+}
+```
+
+
+### response
+성공 시
+202 Accepted
+
+실패 시
+- 이메일 검증 실패
+400 Bad Request
+```json
+{
+    "errorMessage": "값이 유효하지 않습니다. (@가 포함되어야 합니다.)",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+- 비밀번호 검증 실패
+400 Bad Request
+```json
+{
+    "errorMessage": "값이 유효하지 않습니다. (8글자 이상이어야 합니다.)",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+- 중복 회원 존재
+400 Bad Request
+```json
+
+```
+
+<br>
+<br>
+
+</details>
+</div>
+
+
+
+<details>
+<summary><h3>로그인</h3></summary>
+<div markdown="1">
+
+|엔드포인트|메서드명|
+|---|---|
+|/login|post|
+
+### request
+```json
+{
+    "username": "@",
+    "password": "12345678"
+}
+```
+
+
+### response
+성공 시
+200 OK
+
+실패 시
+```c
+"Invalid Username or Password"
+```
+
+<br>
+<br>
+
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 작성</h3></summary>
+<div markdown="1">
+
+|엔드포인트|메서드명|
+|---|---|
+|/board|post|
+
+### request
+```json
+{
+    "title":"hello",
+    "description":"test"
+}
+```
+
+
+### response
+성공 시
+200 OK
+
+실패 시
+- 로그인 되어 있지 않음
+401 Unauthorized
+```json
+{
+    "errorMessage": "로그인 후 이용해주세요",
+    "httpStatus": "UNAUTHORIZED"
+}
+```
+
+- 제목이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "제목을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+- 내용이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "내용을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+<br>
+<br>
+
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 수정</h3></summary>
+<div markdown="1">
+
+|엔드포인트|메서드명|
+|---|---|
+|/board/{id}|put|
+
+### request
+```json
+{
+    "title":"hello",
+    "description":"test"
+}
+```
+
+
+### response
+성공 시
+200 OK
+
+실패 시
+- 로그인 되어 있지 않음
+401 Unauthorized
+```json
+{
+    "errorMessage": "로그인 후 이용해주세요",
+    "httpStatus": "UNAUTHORIZED"
+}
+```
+
+- 수정 권한이 없음.
+- 403 FORBIDDEN
+```json
+{
+    "errorMessage": "수정할 수 없습니다. 잘못된 접근입니다.",
+    "httpStatus": "FORBIDDEN"
+}
+```
+
+- 제목이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "제목을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+- 내용이 작성되어 있지 않음.
+400 BadRequest
+```json
+{
+    "errorMessage": "내용을 채워야 합니다.",
+    "httpStatus": "BAD_REQUEST"
+}
+```
+
+<br>
+<br>
+
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 삭제</h3></summary>
+<div markdown="1">
+
+|엔드포인트|메서드명|
+|---|---|
+|/board/{id}|delete|
+
+성공 시
+202 Accepted
+
+실패 시
+- 로그인 되어 있지 않음
+401 Unauthorized
+```json
+{
+    "errorMessage": "로그인 후 이용해주세요",
+    "httpStatus": "UNAUTHORIZED"
+}
+```
+
+- 수정 권한이 없음.
+- 403 FORBIDDEN
+```json
+{
+    "errorMessage": "수정할 수 없습니다. 잘못된 접근입니다.",
+    "httpStatus": "FORBIDDEN"
+}
+```
+
+
+<br>
+<br>
+
+</details>
+</div>
+
+
+<details>
+<summary><h3>게시글 단일 조회</h3></summary>
+<div markdown="1">
+
+|엔드포인트|메서드명|
+|---|---|
+|/board/{id}|get|
+
+### request
+
+
+
+### response
+성공 시
+```json
+{
+  "title":"안녕하세요",
+  "description": "신입입니다!",
+  "username": "@"
+}
+```
+
+실패 시
+404 NOT FOUND
+```json
+{
+  "errorMessage": "해당 자원을 찾을 수 없습니다.",
+  "httpStatus": "NOT_FOUND"
+}
+```
+
+
+<br>
+<br>
+
+</details>
+</div>
+
+<details>
+<summary><h3>게시글 페이지 조회</h3></summary>
+<div markdown="1">
+
+|엔드포인트|메서드명|
+|---|---|
+|/board?page={pageNum}|get|
+
+### request
+
+
+
+### response
+성공 시
+```json
+{
+    "content": [
+        {
+            "boardId": 1,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 2,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 3,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 4,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 5,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 6,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 7,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 8,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 9,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 10,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 11,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 12,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 13,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 14,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 15,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        },
+        {
+            "boardId": 16,
+            "title": "hello",
+            "description": "test",
+            "username": "@"
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "empty": true,
+            "sorted": false,
+            "unsorted": true
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 20,
+        "paged": true,
+        "unpaged": false
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 16,
+    "first": true,
+    "size": 20,
+    "number": 0,
+    "sort": {
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+    },
+    "numberOfElements": 16,
+    "empty": false
+}
+```
+
+</details>
+</div>
