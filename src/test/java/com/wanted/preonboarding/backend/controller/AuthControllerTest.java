@@ -2,8 +2,7 @@ package com.wanted.preonboarding.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.preonboarding.backend.dto.SignupDto;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -100,5 +99,27 @@ class AuthControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.post(BASE_URL).content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isAccepted());
+    }
+
+    @Test
+    @DisplayName("[회원가입]중복회원 회원가입 거절")
+    void signup_duplicate_user_denied() throws Exception{
+        //given
+        String username = "@2";
+        String password = "12345678";
+
+        //when
+        String body = objectMapper.writeValueAsString(
+                SignupDto.builder()
+                        .username(username)
+                        .password(password)
+                        .build()
+        );
+
+        mvc.perform(MockMvcRequestBuilders.post(BASE_URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isAccepted());
+
+        mvc.perform(MockMvcRequestBuilders.post(BASE_URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
